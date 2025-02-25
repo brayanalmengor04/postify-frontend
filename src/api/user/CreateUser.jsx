@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-export default function CreateUser() {
+
+export default function CreateUser() { 
+    const [selectedRole, setSelectedRole] = useState(1);
+
   return (
     <div className='flex min-h-screen items-center justify-center p-5'>
       <div className="w-1/2 max-w-lg bg-white shadow-lg rounded-lg p-6">
@@ -58,9 +61,50 @@ export default function CreateUser() {
             </div>
 
             {/* Seleccion de Roles Aqui! Seguir ----------- */}
-
-
-          </div>
+             {/* Selección de Roles */}
+             <fieldset>
+                        <legend className="text-sm font-semibold text-gray-900">Select Role</legend>
+                        <p className="mt-1 text-sm text-gray-600">Choose a role to define your access level.</p>
+                        <div className="mt-6 space-y-6">
+                            <div className="flex items-center gap-x-3">
+                                <input 
+                                    id="role-admin" 
+                                    name="user-role" 
+                                    type="radio" 
+                                    value={1}
+                                    checked={selectedRole === 1}
+                                    onChange={(e) => setSelectedRole(Number(e.target.value))}
+                                    className="size-4 appearance-none rounded-full border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600"
+                                />
+                                <label htmlFor="role-admin" className="block text-sm font-medium text-gray-900">Administrator</label>
+                            </div>
+                            <div className="flex items-center gap-x-3">
+                                <input 
+                                    id="role-user" 
+                                    name="user-role" 
+                                    type="radio" 
+                                    value={2}
+                                    checked={selectedRole === 2}
+                                    onChange={(e) => setSelectedRole(Number(e.target.value))}
+                                    className="size-4 appearance-none rounded-full border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600"
+                                />
+                                <label htmlFor="role-user" className="block text-sm font-medium text-gray-900">User</label>
+                            </div>
+                            <div className="flex items-center gap-x-3">
+                                <input 
+                                    id="role-visitor" 
+                                    name="user-role" 
+                                    type="radio" 
+                                    value={3}
+                                    checked={selectedRole === 3}
+                                    onChange={(e) => setSelectedRole(Number(e.target.value))}
+                                    className="size-4 appearance-none rounded-full border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600"
+                                />
+                                <label htmlFor="role-visitor" className="block text-sm font-medium text-gray-900">Visitor</label>
+                            </div>
+                        </div>
+                    </fieldset>         
+                 </div>
 
           {/* Sección de botones fijos */}
           <div className="sticky bottom-0 left-0 right-0 bg-white p-4 flex items-center justify-end gap-x-6 shadow-md">
