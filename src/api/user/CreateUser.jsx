@@ -1,43 +1,89 @@
+import axios from 'axios';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 
-export default function CreateUser() { 
-    const [selectedRole, setSelectedRole] = useState(1);
+export default function CreateUser() {  
+  let navigate = useNavigate();
 
+  const [selectedRole, setSelectedRole] = useState(1); 
+  const [user , setUser] = useState({
+    name: "",
+    lastName: "",
+    streetAddress: "",
+    email: "",
+    password: ""
+  });
+  // Extraemos los valores del usuario
+  const { name, lastName, streetAddress, email, password } = user;
+  const onInputChange = (e) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+  }; 
+  const onSubmit = async (e) => {
+    e.preventDefault(); // Previene la recarga de la página 
+    const urlBackend = "http://localhost:8080/postify-app/user-add";
+
+    try {
+      // Se asegura de que el body del request coincida con UserDTO
+      await axios.post(urlBackend, { ...user, roleId: selectedRole });  
+      navigate("/");
+    } catch (error) {
+      console.error("Error al registrar usuario:", error);
+    }
+  }
   return (
     <div className='flex min-h-screen items-center justify-center p-5'>
       <div className="w-1/2 max-w-lg bg-white shadow-lg rounded-lg p-6">
-        <form className="max-h-[80vh] overflow-y-auto p-4">
-          <div className='border-b border-gray-900/10 pb-6'>
+        <form className="max-h-[80vh] overflow-y-auto p-4"
+        // FUNCION PARA ENVIAR FORMULARIO
+        onSubmit={onSubmit}
+        
+        >
+          <div className='border-b border-gray-900/10 pb-6' >
             <h2 className='text-base font-semibold text-gray-900'>Register new user!</h2>
             <p className='mt-1 text-sm text-gray-600'>Use a permanent address where you can receive mail.</p>
           </div>
 
           <div className='mt-6 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6'>
             <div className='sm:col-span-3'>
-              <label htmlFor='first-name' className='block text-sm/6 font-medium text-gray-900'>First name</label>
+              <label htmlFor='name' className='block text-sm/6 font-medium text-gray-900'>First name</label>
               <div className='mt-2'>
-                <input type='text' name='first-name' id='first-name' autoComplete='given-name'
+                <input type='text' name='name' id='name' autoComplete='given-name'
                   className='block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 
-                  outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6' />
+                  outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6'
+                  //Aqui obtendre los valores para backend
+                  value={name} onChange={onInputChange} required
+
+                  />
               </div>
             </div>
 
             <div className='sm:col-span-3'>
-              <label htmlFor='last-name' className='block text-sm/6 font-medium text-gray-900'>Last name</label>
+              <label htmlFor='lastName' className='block text-sm/6 font-medium text-gray-900'>Last name</label>
               <div className='mt-2'>
-                <input type='text' name='last-name' id='last-name' autoComplete='family-name'
+                <input type='text' name='lastName' id='lastName' autoComplete='family-name'
                   className='block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 
-                  outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6' />
+                  outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6' 
+                  
+                   //Aqui obtendre los valores para backend
+                   value={lastName}
+                   onChange={onInputChange}
+                   required
+                  
+                  />
               </div>
             </div>
-
             <div className='sm:col-span-full'>
               <label htmlFor='email' className='block text-sm/6 font-medium text-gray-900'>Email address</label>
               <div className='mt-2'>
                 <input id='email' name='email' type='email' autoComplete='email'
                   className='block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 
-                  outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6' />
+                  outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6' 
+                   //Aqui obtendre los valores para backend
+                   value={email}
+                   onChange={onInputChange}
+                   required
+                  />
               </div>
             </div>
 
@@ -46,64 +92,50 @@ export default function CreateUser() {
               <div className='mt-2'>
                 <input id='password' name='password' type='password' autoComplete='password'
                   className='block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 
-                  outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6' />
+                  outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6'
+                   //Aqui obtendre los valores para backend
+                   value={password}
+                   onChange={onInputChange}
+                   required
+                  />
               </div>
             </div>
 
             <div className='col-span-full'>
-              <label htmlFor='street-address' className='block text-sm/6 font-medium text-gray-900'>Street address</label>
+              <label htmlFor='streetAddress' className='block text-sm/6 font-medium text-gray-900'>Street address</label>
               <div className='mt-2'>
-                <input type='text' name='street-address' id='street-address' autoComplete='street-address'
+                <input type='text' name='streetAddress' id='streetAddress' autoComplete='streetAddress'
                   className='block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 
-                  outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6' />
+                  outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6' 
+                   //Aqui obtendre los valores para backend
+                   value={streetAddress}
+                   onChange={onInputChange}
+                   required
+                  />
               </div>
               
             </div>
-
-            {/* Seleccion de Roles Aqui! Seguir ----------- */}
-             {/* Selección de Roles */}
-             <fieldset>
-                        <legend className="text-sm font-semibold text-gray-900">Select Role</legend>
-                        <p className="mt-1 text-sm text-gray-600">Choose a role to define your access level.</p>
-                        <div className="mt-6 space-y-6">
-                            <div className="flex items-center gap-x-3">
-                                <input 
-                                    id="role-admin" 
-                                    name="user-role" 
-                                    type="radio" 
-                                    value={1}
-                                    checked={selectedRole === 1}
-                                    onChange={(e) => setSelectedRole(Number(e.target.value))}
-                                    className="size-4 appearance-none rounded-full border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600"
-                                />
-                                <label htmlFor="role-admin" className="block text-sm font-medium text-gray-900">Administrator</label>
-                            </div>
-                            <div className="flex items-center gap-x-3">
-                                <input 
-                                    id="role-user" 
-                                    name="user-role" 
-                                    type="radio" 
-                                    value={2}
-                                    checked={selectedRole === 2}
-                                    onChange={(e) => setSelectedRole(Number(e.target.value))}
-                                    className="size-4 appearance-none rounded-full border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600"
-                                />
-                                <label htmlFor="role-user" className="block text-sm font-medium text-gray-900">User</label>
-                            </div>
-                            <div className="flex items-center gap-x-3">
-                                <input 
-                                    id="role-visitor" 
-                                    name="user-role" 
-                                    type="radio" 
-                                    value={3}
-                                    checked={selectedRole === 3}
-                                    onChange={(e) => setSelectedRole(Number(e.target.value))}
-                                    className="size-4 appearance-none rounded-full border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600"
-                                />
-                                <label htmlFor="role-visitor" className="block text-sm font-medium text-gray-900">Visitor</label>
-                            </div>
-                        </div>
-                    </fieldset>         
+                {/* Seleccion de Roles Aqui! Seguir ----------- */}
+                {/* Selección de Roles */}
+                <fieldset>
+                  <legend className="text-sm font-semibold text-gray-900">Select Role</legend>
+                  <p className="mt-1 text-sm text-gray-600">Choose a role to define your access level.</p>
+                  <div className="mt-6 space-y-6">
+                    {[
+                      { id: 1, label: "Administrator" },
+                      { id: 2, label: "User" },
+                      { id: 3, label: "Visitor" }
+                    ].map(role => (
+                      <div key={role.id} className="flex items-center gap-x-3">
+                        <input id={`role-${role.id}`} name="user-role" type="radio" value={role.id}
+                          checked={selectedRole === role.id}
+                          onChange={(e) => setSelectedRole(Number(e.target.value))}
+                          className="size-4 appearance-none rounded-full border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600" />
+                        <label htmlFor={`role-${role.id}`} className="block text-sm font-medium text-gray-900">{role.label}</label>
+                      </div>
+                    ))}
+                  </div>
+                </fieldset>
                  </div>
 
           {/* Sección de botones fijos */}
