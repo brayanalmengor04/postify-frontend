@@ -1,22 +1,25 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
-import CreateUser from "./api/user/CreateUser"; // Importa correctamente
+import CreateUser from "./api/user/CreateUser";
+import DasboardPage from "./pages/dasboard/DasboardPage";
+
+// Componente para proteger rutas
+const ProtectedRoute = ({ element }) => {
+  const isAuthenticated = localStorage.getItem("authToken"); 
+  return isAuthenticated ? element : <Navigate to="/login" />;
+};
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Ruta principal: siempre redirige al Login */}
         <Route path="/" element={<Navigate to="/login" />} />
-        
-        {/* Página de Login */}
         <Route path="/login" element={<Login />} />
-
-        {/* Otras rutas */}
         <Route path="/user-create" element={<CreateUser />} />
-        <Route path="/postify-dashboard" element={<h1>Dashboard</h1>} />
+        
 
-        {/* Si la ruta no existe, redirige a Login */}
+        {/* RUTA PROTEGIDAS------------ */}
+        <Route path="/postify-dashboard" element={<ProtectedRoute element={<DasboardPage />} />} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
