@@ -1,24 +1,28 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Send, MessageCircle, Heart, Home, User, Settings, LogOut, Menu, X } from "lucide-react";
+import { Send } from "lucide-react";
 import loginImage from "../../assets/images/login.png";
 import { useComments } from "../../hooks/useComments";
+import CommentItem from "../../components/Comment/CommentItem"; 
+import CommentDrop from "../../components/DropdownMenu";
+import SiderBarMenu from "../../template/SiderBarMenu";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
   const { comments, loading, error,fetchComments} = useComments(); // Extraemos fetchComments
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [user, setUser] = useState(null);
+
   const [comment, setComment] = useState({
     content: "",
     likes: 0,
     userId: null,
-  }); 
+  });
+  // Estados ------------------------------
+  
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-
-
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     } else {
@@ -26,9 +30,7 @@ export default function DashboardPage() {
     }
   }, [navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("user");
+  const handleLogout = () => { localStorage.removeItem("authToken"); localStorage.removeItem("user");
     navigate("/login");
   };
 
@@ -49,59 +51,22 @@ export default function DashboardPage() {
     try {
       await axios.post("http://localhost:8080/postify-app/comment-add", comment);
       setComment({ content: "", likes: 0, userId: user?.id }); // Limpiar textarea
-      fetchComments(); // 👈 Vuelve a cargar los comentarios después de agregar uno nuevo
+      fetchComments(); 
     } catch (error) {
       console.error("Error al agregar el comentario:", error);
     }
-  };
+  }; 
+
+  const onDelete = ()=>{console.log("eliminando...")}
+  const onEdit = ()=>{console.log("editando..")}
+
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      {/* Botón para abrir el sidebar */}
-      {!isSidebarOpen && (
-        <button
-          onClick={() => setSidebarOpen(true)}
-          className="cursor-pointer fixed top-4 left-4 bg-purple-400 text-white p-2 rounded-lg shadow-lg hover:bg-gray-900 transition"
-        >
-          <Menu size={24} />
-        </button>
-      )}
-
-      {/* Sidebar */}
-      {isSidebarOpen && (
-        <aside className="w-80 bg-purple-800 shadow-xl p-8 fixed h-full transition-all ease-in-out duration-300">
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-semibold text-white">Postify v1.0</h2>
-            <button onClick={() => setSidebarOpen(false)} className="text-white hover:text-gray-300 transition">
-              <X size={24} />
-            </button>
-          </div>
-
-          {/* User Section */}
-          <div className="flex items-center space-x-4 mt-4">
-            <div className="w-10 h-10 rounded-md bg-white text-purple-700 flex items-center justify-center font-semibold shadow-xl">
-              {user?.name?.charAt(0)}
-            </div>
-            <div>
-              <p className="text-lg text-white font-semibold">{user?.name} {user?.lastName}</p>
-              <p className="text-sm text-gray-200">{user?.email}</p>
-            </div>
-          </div>
-
-          {/* Navigation */}
-          <nav className="mt-8 space-y-4 text-white">
-            <SidebarItem icon={<Home size={20} />} text="Home" />
-            <SidebarItem icon={<User size={20} />} text="Perfil" />
-            <SidebarItem icon={<Settings size={20} />} text="Setting" />
-          </nav>
-
-          {/* Logout */}
-          <button onClick={handleLogout} className="mt-auto flex items-center space-x-2 text-white hover:text-red-600 transition">
-            <LogOut size={20} />
-            <span>Log out</span>
-          </button>
-        </aside>
-      )}
-
+      <div className="flex min-h-screen bg-gray-100"> 
+        <SiderBarMenu isSidebarOpen={isSidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          user={user}
+          handleLogout={handleLogout}
+        />
       {/* Contenido principal */}
       <div className="flex-1 flex flex-col items-center p-8">
         <h1 className="text-3xl font-bold text-gray-800">Postify - Shared & Connect v1.0!</h1>
@@ -124,56 +89,26 @@ export default function DashboardPage() {
                 className="flex-1 bg-transparent outline-none px-3 text-gray-600 placeholder-gray-400 resize-none h-12"
                 rows="1"
               ></textarea>
-              <button type="submit" className="bg-purple-800 text-white px-4 py-2 rounded-lg flex items-center hover:bg-gray-900 transition">
+              <button type="submit" className="cursor-pointer bg-purple-800 text-white px-4 py-2 rounded-lg flex items-center hover:bg-gray-900 transition">
                 <span>Post</span>
                 <Send size={16} />
               </button>
             </div>
           </form>
-
           {/* Lista de comentarios */}
           {comments.map((comment, index) => (
-            <CommentItem key={index} comment={comment} />
+            // <CommentItem key={index} comment={comment} /> 
+            <CommentItem comment={comment} onDelete={onDelete(comment)} onEdit={onEdit(comment)} />
           ))}
         </div>
       </div>
     </div>
   );
 }
-
-const CommentItem = ({ comment }) => (
-  <div className="mt-4 bg-gray-50 p-4 rounded-lg shadow">
-    <div className="flex items-center space-x-3">
-      <img src={loginImage} alt="User" className="w-10 h-10 rounded-full" />
-      <div>
-        <p className="font-semibold text-gray-800">
-          {comment.user?.name} {comment.user?.lastName}
-        </p>
-        <p className="text-sm text-gray-500">
-          {new Date(comment.createdAt).toLocaleString()}
-        </p>
-      </div>
-    </div>
-    <p className="mt-2 text-gray-700">{comment.content}</p>
-    <div className="flex items-center space-x-4 mt-2 text-gray-500">
-      <button className="flex items-center space-x-1 hover:text-red-500 transition">
-        <Heart size={18} />
-        <span>{comment.likes}</span>
-      </button>
-      <button className="flex items-center space-x-1 hover:text-blue-500 transition">
-        <MessageCircle size={18} />
-        <span>0</span>
-      </button>
-    </div>
-    <div className="mt-2 text-sm text-gray-600">
-      <strong>Rol:</strong> {comment.user?.role?.roleName} - {comment.user?.role?.description}
-    </div>
-  </div>
-);
-
 const SidebarItem = ({ icon, text }) => (
-  <button className="flex items-center space-x-3 p-3 rounded-lg text-white hover:bg-purple-700 transition">
+  <button className="cursor-pointer flex items-center space-x-3 p-3 rounded-lg text-white hover:bg-gray-800 transition">
     {icon}
     <span>{text}</span>
   </button>
 );
+
