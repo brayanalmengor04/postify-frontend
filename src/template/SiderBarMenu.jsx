@@ -10,7 +10,7 @@ export default function SiderBarMenu({ isSidebarOpen, setSidebarOpen, user, hand
     {!isSidebarOpen && (
       <button
         onClick={() => setSidebarOpen(true)}
-        className="cursor-pointer fixed top-4 left-4 bg-purple-400 text-white p-2 rounded-lg shadow-lg hover:bg-gray-900 transition"
+        className="cursor-pointer bg-gray-800 fixed top-4 left-4 text-white p-2 rounded-lg shadow-lg hover:bg-gray-600 transition"
       >
         <Menu size={24} />
       </button>

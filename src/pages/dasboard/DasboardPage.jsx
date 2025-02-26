@@ -51,7 +51,7 @@ export default function DashboardPage() {
     try {
       await axios.post("http://localhost:8080/postify-app/comment-add", comment);
       setComment({ content: "", likes: 0, userId: user?.id }); // Limpiar textarea
-      fetchComments(); // 👈 Vuelve a cargar los comentarios después de agregar uno nuevo
+      fetchComments(); 
     } catch (error) {
       console.error("Error al agregar el comentario:", error);
     }
