@@ -17,29 +17,24 @@ export default function Login() {
   const onInputChange = (e) => {
     setLogin({ ...login, [e.target.name]: e.target.value });
   };
-
   const onSubmit = async (e) => {
     e.preventDefault(); 
     const urlBackend = "http://localhost:8080/postify-app/auth/signin";
-
+  
     try {
       const response = await axios.post(urlBackend, login);
       
       if (response.status === 200) {
-
-        // Prueba con localStorage
-        localStorage.setItem("authToken", response.data.token); // Guardar sesión
-
-        // Redireccionar a la dashboard
+        localStorage.setItem("authToken", response.data.token); 
+        localStorage.setItem("user", JSON.stringify(response.data)); // Guardar usuario
         navigate("/postify-dashboard");
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
-
-      // Mostrar mensaje de error si las credenciales son incorrectas
       setErrorMessage("Invalid credentials, try again.");
     }
   };
+  
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4">
