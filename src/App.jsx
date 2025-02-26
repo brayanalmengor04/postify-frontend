@@ -1,8 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
-import CreateUser from "./api/user/CreateUser";
+import CreateUser from "./api/user/CreateUser"; 
 import DasboardPage from "./pages/dasboard/DasboardPage";
-
+import AdmTableRole from "./api/role/AdmTableRole"; 
+import AdmTableUser from "./api/user/AdmTableUser";
 // Componente para proteger rutas
 const ProtectedRoute = ({ element }) => {
   const isAuthenticated = localStorage.getItem("authToken"); 
@@ -19,7 +20,9 @@ function App() {
         
 
         {/* RUTA PROTEGIDAS------------ */}
-        <Route path="/postify-dashboard" element={<ProtectedRoute element={<DasboardPage />} />} />
+        <Route path="/postify-dashboard" element={<ProtectedRoute element={<DasboardPage />} />} /> 
+        <Route path="/postify/admin/roles" element={<ProtectedRoute element={<AdmTableRole />} />} />
+        <Route path="/postify/admin/users" element={<ProtectedRoute element={<AdmTableUser />} />} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
