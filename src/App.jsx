@@ -17,7 +17,7 @@ function App() {
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/user-create" element={<CreateUser />} />
-        
+        <Route path="/user-create/:id" element={<CreateUser />} /> {/* Para edición */}
 
         {/* RUTA PROTEGIDAS------------ */}
         <Route path="/postify-dashboard" element={<ProtectedRoute element={<DasboardPage />} />} /> 

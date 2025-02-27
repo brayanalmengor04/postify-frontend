@@ -1,150 +1,102 @@
 import axios from 'axios';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
-
-export default function CreateUser() {  
+export default function CreateUser() {
   let navigate = useNavigate();
-
-  const [selectedRole, setSelectedRole] = useState(1); 
-  const [user , setUser] = useState({
+  let { id } = useParams();
+  const [selectedRole, setSelectedRole] = useState(1);
+  const [user, setUser] = useState({
     name: "",
     lastName: "",
     streetAddress: "",
     email: "",
     password: ""
   });
-  // Extraemos los valores del usuario
-  const { name, lastName, streetAddress, email, password } = user;
+
+  useEffect(() => {
+    if (id) {
+      axios.get(`http://localhost:8080/postify-app/user/${id}`)
+        .then(response => {
+          setUser(response.data);
+          setSelectedRole(response.data.role.idRole);
+        })
+        .catch(error => console.error("Error al obtener usuario:", error));
+    }
+  }, [id]);
+
   const onInputChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
-  }; 
+  };
+
   const onSubmit = async (e) => {
-    e.preventDefault(); // Previene la recarga de la página 
-    const urlBackend = "http://localhost:8080/postify-app/user-add";
+    e.preventDefault();
+    const urlBackend = id 
+      ? `http://localhost:8080/postify-app/user/${id}` 
+      : "http://localhost:8080/postify-app/user-add";
 
     try {
-      // Se asegura de que el body del request coincida con UserDTO
-      await axios.post(urlBackend, { ...user, roleId: selectedRole });  
+      if (id) {
+        await axios.put(urlBackend, { ...user, roleId: selectedRole }); 
+        navigate("/postify/admin/users");
+      } else {
+        await axios.post(urlBackend, { ...user, roleId: selectedRole });
+      }
       navigate("/");
     } catch (error) {
-      console.error("Error al registrar usuario:", error);
+      console.error("Error al guardar usuario:", error);
     }
-  }
+  };
+
   return (
-    <div className='flex min-h-screen items-center justify-center p-5'>
-      <div className="w-1/2 max-w-lg bg-white shadow-lg rounded-lg p-6">
-        <form className="max-h-[80vh] overflow-y-auto p-4"
-        // FUNCION PARA ENVIAR FORMULARIO
-        onSubmit={onSubmit}
-        
-        >
-          <div className='border-b border-gray-900/10 pb-6' >
-            <h2 className='text-base font-semibold text-gray-900'>Register new user!</h2>
-            <p className='mt-1 text-sm text-gray-600'>Use a permanent address where you can receive mail.</p>
+    <div className='flex min-h-screen items-center justify-center bg-gray-800 p-6'>
+      <div className="w-full max-w-lg bg-gray-900 shadow-2xl rounded-2xl p-8">
+        <h2 className='text-2xl font-bold text-gray-100 text-center mb-6'>
+          {id ? "Edit User" : "Register New User"}
+        </h2>
+        <form onSubmit={onSubmit} className="space-y-5">
+          {['name', 'lastName', 'email', 'password', 'streetAddress'].map((field) => (
+            <div key={field} className="relative z-0 w-full mb-5 group">
+              <input 
+                type={field === 'password' ? 'password' : 'text'}
+                name={field} 
+                value={user[field]} 
+                onChange={onInputChange} 
+                required 
+                className='block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-600 appearance-none focus:outline-none focus:ring-0 focus:border-gray-400 peer'
+                placeholder=" "
+              />
+              <label className='peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 capitalize'>
+                {field.replace(/([A-Z])/g, ' $1')}
+              </label>
+            </div>
+          ))}
+
+          <div className="mt-4">
+            <label className='text-sm font-medium text-gray-300'>Select Role</label>
+            <select 
+              value={selectedRole} 
+              onChange={(e) => setSelectedRole(Number(e.target.value))} 
+              className='w-full mt-2 p-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500'>
+              <option value={1}>Administrator</option>
+              <option value={2}>User</option>
+              <option value={3}>Visitor</option>
+            </select>
           </div>
 
-          <div className='mt-6 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6'>
-            <div className='sm:col-span-3'>
-              <label htmlFor='name' className='block text-sm/6 font-medium text-gray-900'>First name</label>
-              <div className='mt-2'>
-                <input type='text' name='name' id='name' autoComplete='given-name'
-                  className='block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 
-                  outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6'
-                  //Aqui obtendre los valores para backend
-                  value={name} onChange={onInputChange} required
-
-                  />
-              </div>
-            </div>
-
-            <div className='sm:col-span-3'>
-              <label htmlFor='lastName' className='block text-sm/6 font-medium text-gray-900'>Last name</label>
-              <div className='mt-2'>
-                <input type='text' name='lastName' id='lastName' autoComplete='family-name'
-                  className='block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 
-                  outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6' 
-                  
-                   //Aqui obtendre los valores para backend
-                   value={lastName}
-                   onChange={onInputChange}
-                   required
-                  
-                  />
-              </div>
-            </div>
-            <div className='sm:col-span-full'>
-              <label htmlFor='email' className='block text-sm/6 font-medium text-gray-900'>Email address</label>
-              <div className='mt-2'>
-                <input id='email' name='email' type='email' autoComplete='email'
-                  className='block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 
-                  outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6' 
-                   //Aqui obtendre los valores para backend
-                   value={email}
-                   onChange={onInputChange}
-                   required
-                  />
-              </div>
-            </div>
-
-            <div className='sm:col-span-full'>
-              <label htmlFor='password' className='block text-sm/6 font-medium text-gray-900'>Password*</label>
-              <div className='mt-2'>
-                <input id='password' name='password' type='password' autoComplete='password'
-                  className='block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 
-                  outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6'
-                   //Aqui obtendre los valores para backend
-                   value={password}
-                   onChange={onInputChange}
-                   required
-                  />
-              </div>
-            </div>
-
-            <div className='col-span-full'>
-              <label htmlFor='streetAddress' className='block text-sm/6 font-medium text-gray-900'>Street address</label>
-              <div className='mt-2'>
-                <input type='text' name='streetAddress' id='streetAddress' autoComplete='streetAddress'
-                  className='block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 
-                  outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6' 
-                   //Aqui obtendre los valores para backend
-                   value={streetAddress}
-                   onChange={onInputChange}
-                   required
-                  />
-              </div>
-              
-            </div>
-                {/* Seleccion de Roles Aqui! Seguir ----------- */}
-                {/* Selección de Roles */}
-                <fieldset>
-                  <legend className="text-sm font-semibold text-gray-900">Select Role</legend>
-                  <p className="mt-1 text-sm text-gray-600">Choose a role to define your access level.</p>
-                  <div className="mt-6 space-y-6">
-                    {[
-                      { id: 1, label: "Administrator" },
-                      { id: 2, label: "User" },
-                      { id: 3, label: "Visitor" }
-                    ].map(role => (
-                      <div key={role.id} className="flex items-center gap-x-3">
-                        <input id={`role-${role.id}`} name="user-role" type="radio" value={role.id}
-                          checked={selectedRole === role.id}
-                          onChange={(e) => setSelectedRole(Number(e.target.value))}
-                          className="size-4 appearance-none rounded-full border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600" />
-                        <label htmlFor={`role-${role.id}`} className="block text-sm font-medium text-gray-900">{role.label}</label>
-                      </div>
-                    ))}
-                  </div>
-                </fieldset>
-                 </div>
-
-          {/* Sección de botones fijos */}
-          <div className="sticky bottom-0 left-0 right-0 bg-white p-4 flex items-center justify-end gap-x-6 shadow-md">
-            <a href='/' type="button" className="text-sm font-semibold text-gray-900">Cancel</a>
-            <button type="submit"
-              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs 
-              hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-              Save
+          <div className="flex justify-between mt-6">
+            <button 
+              type="button" 
+              onClick={() => navigate("/")} 
+              className="px-5 py-2 text-gray-300 bg-gray-700 rounded-lg shadow-md hover:bg-gray-600 transition"
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit" 
+              className="px-5 py-2 text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-500 transition"
+            >
+              {id ? "Update" : "Save"}
             </button>
           </div>
         </form>
