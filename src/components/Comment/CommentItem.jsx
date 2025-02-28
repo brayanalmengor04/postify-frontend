@@ -43,7 +43,7 @@ export default function CommentItem({ comment, onDelete, onEdit }) {
     </div>
 
     <div className="mt-2 text-sm text-gray-600">
-      <strong>Rol:</strong> {comment.user?.role?.roleName} - {comment.user?.role?.description}
+    <strong>Rol:</strong> {comment.user?.role?.roleName} - {comment.user?.role?.description}
     </div>
   </div>
   )
