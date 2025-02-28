@@ -13,6 +13,7 @@ export default function DashboardPage() {
   const { comments, loading, error,fetchComments} = useComments(); // Extraemos fetchComments
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [editingComment, setEditingComment] = useState(null);
 
   const [comment, setComment] = useState({
     content: "",
@@ -48,17 +49,47 @@ export default function DashboardPage() {
       console.error("Usuario no autenticado");
       return;
     }
+  
     try {
-      await axios.post("http://localhost:8080/postify-app/comment-add", comment);
-      setComment({ content: "", likes: 0, userId: user?.id }); // Limpiar textarea
-      fetchComments(); 
+      if (editingComment) {
+        // Si hay un comentario en edición, se actualiza 
+        await axios.put(`http://localhost:8080/postify-app/comment/${editingComment.id}`, comment, {
+          headers: { "Content-Type": "application/json" },
+        });
+        setEditingComment(null); // Resetear el estado de edición
+      } else {
+        // Si no hay comentario en edición, se crea uno nuevo
+        await axios.post("http://localhost:8080/postify-app/comment-add", comment);
+      }
+  
+      setComment({ content: "", likes: 0, userId: user?.id });
+      fetchComments();
     } catch (error) {
-      console.error("Error al agregar el comentario:", error);
+      console.error("Error al procesar el comentario:", error);
     }
-  }; 
+  };
+  const onDelete = async (comment) => {
+    try {
+      console.log("Eliminando comentario con ID:", comment.id);
+      await axios.delete(`http://localhost:8080/postify-app/comment/${comment.id}`);
+      fetchComments();
+    } catch (error) {
+      console.log("Error al eliminar comentario:", error);
+    }
+  };
+  
 
-  const onDelete = ()=>{console.log("eliminando...")}
-  const onEdit = ()=>{console.log("editando..")}
+
+
+  const onEdit = (comment) => {
+    setEditingComment(comment); // Guarda el comentario seleccionado en estado
+    setComment({
+      content: comment.content,
+      likes: comment.likes,
+      userId: comment.user.id,
+    });
+  };
+  
 
   return (
       <div className="flex min-h-screen bg-gray-100"> 
@@ -89,17 +120,27 @@ export default function DashboardPage() {
                 className="flex-1 bg-transparent outline-none px-3 text-gray-600 placeholder-gray-400 resize-none h-12"
                 rows="1"
               ></textarea>
-              <button type="submit" className="cursor-pointer bg-purple-800 text-white px-4 py-2 rounded-lg flex items-center hover:bg-gray-900 transition">
-                <span>Post</span>
+              <button type="submit" className="bg-purple-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900 transition">
+                {editingComment ? "Update" : "Post"}
                 <Send size={16} />
               </button>
+
             </div>
           </form>
           {/* Lista de comentarios */}
-          {comments.map((comment, index) => (
-            // <CommentItem key={index} comment={comment} /> 
-            <CommentItem comment={comment} onDelete={onDelete(comment)} onEdit={onEdit(comment)} />
-          ))}
+          {/* {comments.map((comment) => (
+            <CommentItem 
+              key={comment.id} 
+              comment={comment} 
+              user={user} 
+              onDelete={onDelete(comment)} 
+              onEdit={onEdit} 
+            />
+            ))} */} 
+
+            {comments.map((comment) => (
+              <CommentItem key={comment.id} comment={comment} user={user} onDelete={onDelete}  onEdit={onEdit}  />
+               ))}
         </div>
       </div>
     </div>
