@@ -3,7 +3,7 @@ import { Heart, MessageCircle, Trash2, Edit } from "lucide-react";
 import loginImage from "../../assets/images/login.png"; 
 export default function CommentItem({ comment, user, onDelete, onEdit }) {
   const isOwner = user?.id === comment.user?.id;
-  const isAdmin = user?.role?.roleName === "Administrador"; // Ajusta según cómo se almacena el rol
+  const isAdmin = user?.role?.roleName === "ADMIN"; // Ajusta según cómo se almacena el rol
   const [showConfirm, setShowConfirm] = useState(false);
 
 
