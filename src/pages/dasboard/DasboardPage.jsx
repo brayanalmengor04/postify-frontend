@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Send } from "lucide-react";
-import loginImage from "../../assets/images/login.png";
+import loginImage from "../../assets/images/avatarDefault.jpg";
 import { useComments } from "../../hooks/useComments";
 import CommentItem from "../../components/Comment/CommentItem"; 
 import CommentDrop from "../../components/DropdownMenu";

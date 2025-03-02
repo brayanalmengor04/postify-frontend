@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Heart, MessageCircle, Trash2, Edit } from "lucide-react"; 
-import loginImage from "../../assets/images/login.png"; 
+import loginImage from "../../assets/images/avatarDefault.jpg"; 
 export default function CommentItem({ comment, user, onDelete, onEdit }) {
   const isOwner = user?.id === comment.user?.id;
   const isAdmin = user?.role?.roleName === "ADMIN"; // Ajusta según cómo se almacena el rol

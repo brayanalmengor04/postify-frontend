@@ -40,7 +40,7 @@ export default function SiderBarMenu({ isSidebarOpen, setSidebarOpen, user, hand
         {/* Navigation */}
         <nav className="mt-8 space-y-4 text-white flex-grow">
           <SidebarItem icon={<Home size={20} />} text="Home" url={"/postify-dashboard"} />
-          <SidebarItem icon={<User size={20} />} text="Perfil" url={"#"} />
+          <SidebarItem icon={<User size={20} />} text="Perfil" url={`/user-perfil/${user.id}`} />
           <DropdownMenu icon={<Briefcase size={20} />} text={"Administrations"} />
           <SidebarItem icon={<Settings size={20} />} text="Setting" />
         </nav>
