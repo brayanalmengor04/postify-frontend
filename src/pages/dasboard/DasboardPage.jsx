@@ -13,7 +13,9 @@ export default function DashboardPage() {
   const { comments, loading, error,fetchComments} = useComments(); // Extraemos fetchComments
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [user, setUser] = useState(null);
-  const [editingComment, setEditingComment] = useState(null);
+  const [editingComment, setEditingComment] = useState(null); 
+
+  
 
   const [comment, setComment] = useState({
     content: "",
@@ -77,10 +79,6 @@ export default function DashboardPage() {
       console.log("Error al eliminar comentario:", error);
     }
   };
-  
-
-
-
   const onEdit = (comment) => {
     setEditingComment(comment); // Guarda el comentario seleccionado en estado
     setComment({
@@ -89,8 +87,6 @@ export default function DashboardPage() {
       userId: comment.user.id,
     });
   };
-  
-
   return (
       <div className="flex min-h-screen bg-gray-100"> 
         <SiderBarMenu isSidebarOpen={isSidebarOpen}
@@ -120,24 +116,15 @@ export default function DashboardPage() {
                 className="flex-1 bg-transparent outline-none px-3 text-gray-600 placeholder-gray-400 resize-none h-12"
                 rows="1"
               ></textarea>
-              <button type="submit" className="bg-purple-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900 transition">
-                {editingComment ? "Update" : "Post"}
-                <Send size={16} />
-              </button>
-
+            <button
+                  type="submit"
+                  className="cursor-pointer bg-purple-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900 transition flex items-center gap-2"
+                >
+              {editingComment ? "Update" : "Post"}
+              <Send size={16} />
+            </button>
             </div>
           </form>
-          {/* Lista de comentarios */}
-          {/* {comments.map((comment) => (
-            <CommentItem 
-              key={comment.id} 
-              comment={comment} 
-              user={user} 
-              onDelete={onDelete(comment)} 
-              onEdit={onEdit} 
-            />
-            ))} */} 
-
             {comments.map((comment) => (
               <CommentItem key={comment.id} comment={comment} user={user} onDelete={onDelete}  onEdit={onEdit}  />
                ))}
