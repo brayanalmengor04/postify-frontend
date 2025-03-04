@@ -56,7 +56,6 @@ Welcome to **Postify Frontend**, the React-based user interface that powers **Po
 | **Frontend** | React, Vite, TailwindCSS    |
 | **State Mgmt** | React Hooks               |
 | **Backend API** | Spring Boot (Postify API) |
-| **Authentication** | JWT, Role-Based Access |
 
 ---
 
@@ -78,22 +77,9 @@ The application should be running at `http://localhost:5173/`
 
 ---
 
-## 🖼️ Screenshots
-### 🔐 Login Page
-<img src="github/demo/login.jpg" width="600" alt="Login Page">
-_Users can log in using their credentials to access the platform._
-
-### 📊 Dashboard
-<img src="github/demo/dasboard.png" width="600" alt="Dashboard">
-_Overview of user activities, including posts, comments, and interactions._
-
-### 💬 Comments Section
-<img src="github/demo/comentarios.png" width="600" alt="Comments Section">
-_Users can comment on posts and engage in discussions._
-
-### 🆕 New User Registration
-<img src="github/demo/newuser.png" width="600" alt="New User Registration">
-_New users can sign up and create an account to start posting._
+## 🔗 Backend API
+To set up the backend for **Postify**, clone and follow the instructions in the backend repository:
+👉 [Postify Backend Repository](https://github.com/brayanalmengor04/postify-backend)
 
 ---
 
@@ -122,8 +108,29 @@ We follow a **clean code** approach, prioritizing readability, reusability, and 
 We encourage meaningful discussions and improvements. Let’s build a scalable and efficient platform together! 🔥
 
 ---
+
+## 🖼️ Screenshots
+### 🔐 Login Page
+![Login Page](github/demo/login.jpg)  
+_Users can log in using their credentials to access the platform._
+
+### 📊 Dashboard
+![Dashboard](github/demo/dasboard.png)
+_Overview of user activities, including posts, comments, and interactions._
+
+### 💬 Comments Section
+![Comments](github/demo/comentarios.png)
+_Users can comment on posts and engage in discussions._
+
+### 🆕 New User Registration
+![New User](github/demo/newuser.png)
+_New users can sign up and create an account to start posting._
+
+---
+
 ## 📜 License
 This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
 
 ---
-**🚀 Join us and start sharing today! Let’s build
+
+**🚀 Join us and start sharing today! Let’s build something amazing together! 🔥**
