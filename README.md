@@ -56,7 +56,6 @@ Welcome to **Postify Frontend**, the React-based user interface that powers **Po
 | **Frontend** | React, Vite, TailwindCSS    |
 | **State Mgmt** | React Hooks               |
 | **Backend API** | Spring Boot (Postify API) |
-| **Authentication** | JWT, Role-Based Access |
 
 ---
 
