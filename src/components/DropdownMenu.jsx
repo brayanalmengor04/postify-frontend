@@ -5,8 +5,6 @@ import { Link } from 'react-router-dom';
 
 export default function DropdownMenu({ icon, text }) { 
     const [isOpen, setIsOpen] = useState(false);
-
-    
   return (
     <div className="relative inline-block">
       <button
