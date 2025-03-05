@@ -70,7 +70,7 @@ export default function CommentItem({ comment, user, onDelete, onEdit}) {
       <p className="mt-3 text-gray-700 text-lg leading-relaxed">{comment.content}</p>
 
       <div className="mt-4 flex items-center space-x-6 text-gray-600">
-        <button className="cursor-pointer flex items-center space-x-2 hover:text-red-700">
+        <button className="cursor-pointer flex items-center space-x-2 hover:text-red-800">
           <Heart size={20} />
           <span>0</span>
         </button>
