@@ -12,12 +12,14 @@ export default function DashboardPage() {
   // Aqui manejo la carga de los comentarios 
   const { comments, loading, error, fetchComments } = useComments(); 
   // Acciones para comentarios 
-  const { comment, editingComment, handleChange, handleSubmit, handleDelete, handleEdit } = useCommentActions(user, fetchComments);
-  // Slider menu para manejar 
-  const [isSidebarOpen, setSidebarOpen] = useState(false); 
+  const { comment, editingComment, handleChange,handleLike, handleSubmit, handleDelete, handleEdit } = useCommentActions(user, fetchComments);
+  // Slider menu para manejar  
+  
+  const [isSidebarOpen, setSidebarOpen] = useState(false);  
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <SiderBarMenu isSidebarOpen={isSidebarOpen} setSidebarOpen={setSidebarOpen} user={user} handleLogout={handleLogout} />
+     <SiderBarMenu isSidebarOpen={isSidebarOpen} setSidebarOpen={setSidebarOpen} user={user || {}} handleLogout={handleLogout} />
+
       {/* Contenido principal */}
       <div className="flex-1 flex flex-col items-center p-8">
         <h1 className="text-3xl font-bold text-gray-800">Postify - Shared & Connect v1.0!</h1>
@@ -47,9 +49,17 @@ export default function DashboardPage() {
               </button>
             </div>
           </form>
+          
           {/* Lista de comentarios */}
           {comments.map((comment) => (
-            <CommentItem key={comment.id} comment={comment} user={user} onDelete={() => handleDelete(comment.id)} onEdit={() => handleEdit(comment)} />
+            <CommentItem
+              key={comment.id}
+              comment={comment}
+              user={user}
+              onDelete={() => handleDelete(comment.id)}
+              onEdit={() => handleEdit(comment)}
+              onLike={handleLike} 
+            />
           ))}
         </div>
       </div>

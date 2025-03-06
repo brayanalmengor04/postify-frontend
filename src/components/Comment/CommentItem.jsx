@@ -4,12 +4,14 @@ import loginImage from "../../assets/images/avatarDefault.jpg";
 import ReplyItem from "../Reply/ReplyItem";
 import { useReplies } from "../../hooks/reply/useReplies";
 
-export default function CommentItem({ comment, user, onDelete, onEdit }) {
+export default function CommentItem({ comment, user, onDelete, onEdit ,onLike}) {
   const isOwner = user?.id === comment.user?.id;
   const isAdmin = user?.role?.roleName === "ADMIN";
   const [showConfirm, setShowConfirm] = useState(false);
   const [showReplies, setShowReplies] = useState(false); // Estado para mostrar respuestas 
-  const [showReplyInput, setShowReplyInput] = useState(false);
+  const [showReplyInput, setShowReplyInput] = useState(false); 
+  const [liked , setLiked] = useState(false); 
+
   // Manejo de reply 
   const { replies, replyContent, handleReplyChange, submitReply } = useReplies(comment.id, user.id);
   return (
@@ -36,9 +38,12 @@ export default function CommentItem({ comment, user, onDelete, onEdit }) {
       <p className="mt-3 text-gray-700 text-lg leading-relaxed">{comment.content}</p>
 
       <div className="mt-4 flex items-center space-x-6 text-gray-600">
-        <button className="cursor-pointer flex items-center space-x-2 hover:text-red-800">
+        <button
+          className="cursor-pointer flex items-center space-x-2 hover:text-red-800"
+          onClick={() => onLike(comment.id)} // Llamar a handleLike
+        >
           <Heart size={20} />
-          <span>0</span>
+          <span>{comment.likes}</span>
         </button>
         <button
           className="cursor-pointer flex items-center space-x-2 hover:text-blue-600"
