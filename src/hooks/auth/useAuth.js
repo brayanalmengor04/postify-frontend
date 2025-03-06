@@ -16,6 +16,7 @@ export function useAuth() {
     }
   }, [navigate]);
 
+  
   // Función de inicio de sesión
   const login = async (credentials) => {
     try {
