@@ -65,7 +65,6 @@ export function useCommentActions(user, fetchComments) { // Recibe fetchComments
       }
     }
   };
-  
   return {
     comment,
     editingComment,

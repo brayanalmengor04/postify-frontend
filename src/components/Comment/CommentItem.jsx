@@ -38,13 +38,16 @@ export default function CommentItem({ comment, user, onDelete, onEdit ,onLike}) 
       <p className="mt-3 text-gray-700 text-lg leading-relaxed">{comment.content}</p>
 
       <div className="mt-4 flex items-center space-x-6 text-gray-600">
-        <button
-          className="cursor-pointer flex items-center space-x-2 hover:text-red-800"
-          onClick={() => onLike(comment.id)} // Llamar a handleLike
-        >
-          <Heart size={20} />
-          <span>{comment.likes}</span>
-        </button>
+      <button
+        className="cursor-pointer flex items-center space-x-2 hover:text-red-800"
+        onClick={() => {
+          onLike(comment.id);
+          setLiked(!liked); // Cambia el estado de "like"
+        }}
+      >
+        {liked ? <Heart size={20} fill="red" /> : <Heart size={20} />}
+        <span>{comment.likes}</span>
+      </button>
         <button
           className="cursor-pointer flex items-center space-x-2 hover:text-blue-600"
           onClick={() => setShowReplies(!showReplies)}
